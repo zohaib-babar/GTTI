@@ -19,10 +19,10 @@ const SITE = {
   intro:
     "Practical, workshop-first training in drafting, vehicles, surveying and professional cooking, built to get you working.",
   // TODO: replace with real institute details
-  address: "GTTI Main Campus, Punjab, Pakistan",
-  phone: "+92 300 0000000",
+  address: "GTTI 465 Campus Samundri, Faislabad, Pakistan",
+  phone: "+92 324 8604353",
   email: "info@gtti.edu.pk",
-  hours: "Mon to Sat, 8:00 am to 4:00 pm",
+  hours: "Mon to Sat, 8:00 am to 12:00 pm",
 };
 
 const NAV = [
