@@ -34,7 +34,7 @@ test('opens a WhatsApp enquiry containing all form details', () => {
 
   expect(window.open).toHaveBeenCalledTimes(1);
   const [url, target] = window.open.mock.calls[0];
-  expect(url).toContain('https://wa.me/923248604353?text=');
+  expect(url).toContain('https://wa.me/923336661470?text=');
   expect(target).toBe('_blank');
   expect(decodeURIComponent(url)).toContain('Name: Ali Khan');
   expect(decodeURIComponent(url)).toContain('Phone: 03001234567');
