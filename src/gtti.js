@@ -139,8 +139,7 @@ html{scroll-behavior:smooth}
 
 /* logo */
 .g-logo{display:flex;align-items:center;gap:12px}
-.g-logo-mark{width:40px;height:40px;border-radius:8px;background:var(--n900);display:grid;place-items:center}
-.g-logo-mark svg{width:24px;height:24px}
+.g-logo-mark{width:48px;height:48px;flex:none;border-radius:8px;background:#fff;object-fit:contain}
 .g-logo b{display:block;font-family:"Bricolage Grotesque",sans-serif;font-size:18px;font-weight:800;color:var(--n900);line-height:1.1}
 .g-logo small{display:none;font-size:11px;font-weight:500;color:#64748b}
 @media(min-width:420px){.g-logo small{display:block}}
@@ -277,10 +276,57 @@ html{scroll-behavior:smooth}
 @media(min-width:640px){.g-foot-grid{grid-template-columns:repeat(2,1fr)}}
 @media(min-width:1024px){.g-foot-grid{grid-template-columns:repeat(4,1fr)}}
 .g-foot-grid>div:first-child p{margin-top:20px;max-width:300px;font-size:14px}
+.g-foot-grid>div{min-width:0}
 .g-foot h3{color:#fff;font-size:16px;font-weight:700}
 .g-foot ul{margin-top:16px;display:flex;flex-direction:column;gap:8px;font-size:14px}
+.g-foot a{overflow-wrap:anywhere}
 .g-foot a:hover{color:#fff}
 .g-copy{border-top:1px solid rgba(255,255,255,.1);padding:24px 0;font-size:14px}
+
+@media(max-width:639px){
+  .g-sec{padding:64px 0}
+  .g-hero-in{gap:40px;padding:56px 0}
+  .g-hero h1{font-size:clamp(38px,11vw,56px)}
+  .g-hero-p{margin-top:18px;font-size:16px}
+  .g-hero-cta{margin-top:24px}
+  .g-hero-cta .g-btn{flex:1 1 100%}
+  .g-stats{max-width:none;margin-top:32px;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding-top:20px}
+  .g-stats dt{font-size:11px}
+  .g-stats dd{font-size:clamp(16px,5vw,22px)}
+  .g-collage{gap:10px}
+  .g-collage>div{border-radius:12px}
+  .g-about{gap:52px}
+  .g-badge{right:12px;bottom:-18px;max-width:210px;padding:16px;font-size:16px}
+  .g-head p{margin-top:12px;font-size:16px}
+  .g-grid3,.g-gal{margin-top:32px}
+  .g-grid3{gap:16px}
+  .g-card-body{padding:20px}
+  .g-card h3{font-size:18px}
+  .g-gal{grid-auto-rows:150px;gap:10px}
+  .g-tile span{padding:28px 12px 12px;font-size:12px}
+  .g-adm-in,.g-contact{gap:36px}
+  .g-steps{margin-top:28px;gap:20px}
+  .g-steps li{gap:14px}
+  .g-docs{padding:22px}
+  .g-info{margin-top:28px;gap:20px}
+  .g-info dd{font-size:16px;overflow-wrap:anywhere}
+  .g-form{padding:20px}
+  .g-fields{gap:16px}
+  .g-foot-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:32px 20px;padding:48px 0}
+  .g-foot-grid>div:first-child,.g-foot-grid>div:last-child{grid-column:1 / -1}
+  .g-copy{padding:20px 0;text-align:center}
+}
+
+@media(max-width:380px){
+  .g-wrap{padding:0 16px}
+  .g-nav-row{height:64px}
+  .g-logo{gap:8px}
+  .g-logo-mark{width:40px;height:40px}
+  .g-logo small{font-size:10px}
+  .g-stats dd{font-size:16px}
+  .g-card-top{flex-wrap:wrap}
+  .g-card-top h3{min-width:0}
+}
 `;
 
 /* ------------------------------------------------------------------ */
@@ -314,11 +360,7 @@ function SectionHeading({ title, text, light, center }) {
 function Logo({ light }) {
   return (
     <span className={`g-logo${light ? " light" : ""}`}>
-      <span className="g-logo-mark">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round">
-          <path d="M17 7a6 6 0 1 0 0 10v-4h-4" />
-        </svg>
-      </span>
+      <img className="g-logo-mark" src="/gtti-logo.jpg" alt="" />
       <span>
         <b>GTTI</b>
         <small>Government Technical Training Institute</small>
@@ -619,40 +661,51 @@ function Admissions() {
   );
 }
 
-const EMPTY = { name: "", phone: "", email: "", course: "", message: "" };
+const WHATSAPP_NUMBER = "923248604353";
+const EMPTY = { name: "", phone: "", whatsapp: "", email: "", course: "", message: "" };
 
 function Contact() {
   const [v, setV] = useState(EMPTY);
   const [errors, setErrors] = useState({});
-  const [status, setStatus] = useState("idle"); // idle | sending | sent | failed
+  const [status, setStatus] = useState("idle"); // idle | ready | blocked
+  const [whatsappUrl, setWhatsappUrl] = useState("");
   const set = (k) => (e) => setV((s) => ({ ...s, [k]: e.target.value }));
 
   const validate = () => {
     const e = {};
     if (!v.name.trim()) e.name = "Enter your full name.";
     if (!/^[+\d][\d\s-]{6,}$/.test(v.phone.trim())) e.phone = "Enter a valid phone number.";
+    const whatsappDigits = v.whatsapp.replace(/\D/g, "");
+    if (whatsappDigits.length < 7 || whatsappDigits.length > 15) e.whatsapp = "Enter a valid WhatsApp number.";
     if (v.email && !/^\S+@\S+\.\S+$/.test(v.email)) e.email = "Enter a valid email address.";
     if (!v.course) e.course = "Choose a course.";
     return e;
   };
 
-  const onSubmit = async (ev) => {
+  const onSubmit = (ev) => {
     ev.preventDefault();
     const e = validate();
     setErrors(e);
     if (Object.keys(e).length) return;
-    setStatus("sending");
-    try {
-      // TODO: send to your backend / form service, e.g.
-      // const res = await fetch("/api/contact", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(v) });
-      // if (!res.ok) throw new Error();
-      await new Promise((r) => setTimeout(r, 600));
-      console.log("GTTI enquiry:", v);
-      setStatus("sent");
-      setV(EMPTY);
-    } catch {
-      setStatus("failed");
+    const message = [
+      "New GTTI enquiry",
+      `Name: ${v.name.trim()}`,
+      `Phone: ${v.phone.trim()}`,
+      `WhatsApp: ${v.whatsapp.trim()}`,
+      `Email: ${v.email.trim() || "Not provided"}`,
+      `Course: ${v.course}`,
+      `Message: ${v.message.trim() || "Not provided"}`,
+    ].join("\n");
+    const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+    setWhatsappUrl(url);
+
+    const whatsappWindow = window.open(url, "_blank");
+    if (!whatsappWindow) {
+      setStatus("blocked");
+      return;
     }
+    whatsappWindow.opener = null;
+    setStatus("ready");
   };
 
   const info = [["Address", SITE.address], ["Phone", SITE.phone], ["Email", SITE.email], ["Hours", SITE.hours]];
@@ -670,11 +723,12 @@ function Contact() {
         </div>
 
         <form data-reveal className="g-form" onSubmit={onSubmit} noValidate>
-          {status === "sent" ? (
+          {status === "ready" ? (
             <div className="g-sent" role="status">
-              <h3>Enquiry sent</h3>
-              <p>Thank you. Our team will contact you shortly.</p>
-              <button type="button" className="g-link" onClick={() => setStatus("idle")}>Send another enquiry</button>
+              <h3>WhatsApp message prepared</h3>
+              <p>Please press Send in WhatsApp to deliver your enquiry.</p>
+              <a className="g-link" href={whatsappUrl} target="_blank" rel="noopener noreferrer">Open WhatsApp again</a>
+              <button type="button" className="g-link" onClick={() => { setStatus("idle"); setV(EMPTY); }}>Send another enquiry</button>
             </div>
           ) : (
             <div className="g-fields">
@@ -687,6 +741,11 @@ function Contact() {
                 <span className="lbl">Phone</span>
                 <input type="tel" value={v.phone} onChange={set("phone")} autoComplete="tel" aria-invalid={!!errors.phone} />
                 {errors.phone && <span className="g-err">{errors.phone}</span>}
+              </label>
+              <label className="g-field">
+                <span className="lbl">WhatsApp number</span>
+                <input type="tel" value={v.whatsapp} onChange={set("whatsapp")} autoComplete="tel" placeholder="+92 3XX XXXXXXX" aria-invalid={!!errors.whatsapp} />
+                {errors.whatsapp && <span className="g-err">{errors.whatsapp}</span>}
               </label>
               <label className="g-field">
                 <span className="lbl">Email (optional)</span>
@@ -706,12 +765,12 @@ function Contact() {
                 <textarea rows={4} value={v.message} onChange={set("message")} />
               </label>
               <div className="full">
-                <button type="submit" className="g-submit" disabled={status === "sending"}>
-                  {status === "sending" ? "Sending..." : "Send enquiry"}
+                <button type="submit" className="g-submit">
+                  Send enquiry on WhatsApp
                 </button>
-                {status === "failed" && (
+                {status === "blocked" && (
                   <p role="alert" className="g-err" style={{ marginTop: 12 }}>
-                    The enquiry could not be sent. Check your connection and try again.
+                    Your browser blocked the WhatsApp window. <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">Open WhatsApp</a> to continue.
                   </p>
                 )}
               </div>
