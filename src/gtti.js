@@ -43,7 +43,7 @@ const IMG = {
 
 // Durations and levels are placeholders: update from your prospectus.
 const COURSES = [
-  { id: "bs-autocad", title: "BS AutoCAD", level: "Advanced", duration: "2 years",
+  { id: "bs-autocad", title: "AutoCAD", level: "Advanced", duration: "6 months",
     summary: "Advanced drafting and design practice for engineering and architectural drawings.",
     image: u("photo-1581092160562-40aa08e78837"),
     points: ["2D and 3D drafting", "Plan and elevation drawings", "Project portfolio"] },
