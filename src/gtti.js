@@ -661,7 +661,7 @@ function Admissions() {
   );
 }
 
-const WHATSAPP_NUMBER = "923336661470";
+const WHATSAPP_NUMBER = "923248604353";
 const EMPTY = { name: "", phone: "", whatsapp: "", email: "", course: "", message: "" };
 
 function Contact() {
